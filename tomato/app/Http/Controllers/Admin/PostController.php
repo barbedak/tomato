@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Post\StoreRequest;
+use App\Http\Requests\Admin\Post\UpdateRequest;
 use App\Http\Resources\Category\CategoryResource;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Category;
@@ -40,8 +41,8 @@ class PostController extends Controller
 
     public function store(StoreRequest $request)
     {
-//        $data = $request->except('post.images');
         $data = $request->validated();
+//        $data = $request->validated();
         $post = PostService::store($data);
         return PostResource::make($post)->resolve();
     }
@@ -53,8 +54,9 @@ class PostController extends Controller
         return inertia('Admin/Post/Edit', compact('post', 'categories'));
     }
 
-    public function update(Post $post, StoreRequest $request)
+    public function update(Post $post, UpdateRequest $request)
     {
+        dd($request);
         $data = $request->validated();
         $post = PostService::update($post, $data);
         return inertia('Admin/Post/Show', compact('post'));

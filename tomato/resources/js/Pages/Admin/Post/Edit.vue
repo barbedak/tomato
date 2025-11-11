@@ -22,20 +22,24 @@
                 </div>
                 <div class="mb-4">
                     <input v-model="entries.tags" class="border border-gray-200 p-4 w-full" type="text"
-                    placeholder="tags">
+                           placeholder="tags">
                 </div>
                 <div class="mb-4">
                     <input ref="files_input" multiple @change="selectFile" class="border border-gray-200 p-4 w-full"
                            type="file">
                 </div>
-                <div class="text-grey-700 flex">
-                    <div v-for="image in post.images" class="p-2">
-                        <img :src="image.url" :alt="post.title" :title="post.title" width="200" height="300">
+                <template v-if="post.images.length > 0">
+                    <div class="text-grey-700 flex">
+                        <div v-for="image in post.images" class="p-2 w-1/6">
+                            <img :src="image.url" :alt="post.title" :title="post.title">
+                            <a @click.prevent="deleteImage(image)" href="#"
+                               class="text-xs inline-block px-3 py-2 bg-red-600 border border-red-700 text-white">DELETE</a>
+                        </div>
                     </div>
-                </div>
+                </template>
                 <div class="mb-4">
-                    <a href="#" @click.prevent="storePost"
-                       class="text-xs px-3 py-2 bg-sky-600 border border-sky-700 text-white">STORE</a>
+                    <a href="#" @click.prevent="updatePost"
+                       class="text-xs px-3 py-2 bg-sky-600 border border-sky-700 text-white">UPDATE</a>
                 </div>
             </div>
         </div>
@@ -45,6 +49,7 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link} from "@inertiajs/vue3";
+import {castArray} from "concurrently/dist/src/utils.js";
 
 export default {
     name: "Edit",
@@ -62,16 +67,11 @@ export default {
 
     data() {
         return {
-            _method: "put",
             entries: {
-                post: {
-                    id: this.post.id,
-                    title: this.post.title,
-                    body: this.post.body,
-                    description: this.post.description,
-                    category_id: this.post.category_id
-                },
+                post: this.post,
                 tags: this.post.tags,
+                images: [],
+                _method: "PATCH",
             }
         }
     },
@@ -81,29 +81,35 @@ export default {
     },
 
     methods: {
-        storePost() {
-            axios.post(route('admin.posts.update', this.entries.post.id), this.entries, {
+        updatePost() {
+            axios.post(route('admin.posts.update', this.post.id), this.entries, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
                 .then((res) => {
-                    // this.$refs.files_input.value = null;
-                    this.entries = {
-                        post: {
-                            title: this.post.title,
-                            body: this.post.body,
-                            description: this.post.description,
-                            category_id: this.post.category_id
-                        },
-                        tags: this.post.tags,
-                    }
+                    this.$refs.files_input.value = null;
+                    // this.entries = {
+                    //     post: {
+                    //         title: this.post.title,
+                    //         body: this.post.body,
+                    //         description: this.post.description,
+                    //         category_id: this.post.category_id
+                    //     },
+                    //     tags: this.post.tags,
+                    // }
                 })//успех
             // .catch(e) ошибка запроса
             //.finally() в любом случае
         },
+        deleteImage(image) {
+            axios.delete(route("admin.images.destroy", image.id))
+                .then(res => {
+                    this.post.images = this.post.images.filter(img => img.id !== image.id)
+                })
+        },
         selectFile(e) {
-            this.entries.post.images = e.target.files
+            this.entries.images = e.target.files
         }
     }
 }

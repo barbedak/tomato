@@ -33,7 +33,7 @@ class PostResource extends JsonResource
             'comments' => $this->comments,
 //            'img_url' => $this->img_url,
             'images' => ImageResource::collection($this->images)->resolve(),
-            'tags' => $this->tags_titles,
+            'tags' => $this->tags_as_string,
 
         ];
     }

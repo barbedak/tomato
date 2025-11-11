@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin\Post;
 use Illuminate\Foundation\Http\FormRequest;
 use Storage;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
 
     /**
@@ -20,7 +20,7 @@ class StoreRequest extends FormRequest
             'post.body' => 'nullable|string',
             'post.category_id' => 'required|integer|exists:categories,id',
             'post.profile_id' => 'required|integer|exists:profiles,id',
-//            'images' => 'nullable|array',
+            'images' => 'nullable|array',
             'images.*' => 'nullable|file|max:5000|mimes:jpg,jpeg,png',
             'tags' => 'nullable|string',
         ];
@@ -42,9 +42,10 @@ class StoreRequest extends FormRequest
 //    в контроллере нужно использовать validationData() вместо validated()
     {
 //        $imagePaths = [];
-//        foreach ($this->images as $image) {
-//
-//            $imagePaths[] = Storage::disk('public')->put('/images', $image);
+//        if (array_key_exists('images', $this->validated())){
+//            foreach ($this->images as $image) {
+//                $imagePaths[] = Storage::disk('public')->put('/images', $image);
+//            }
 //        }
 //        return $this->merge([
 //            'image_paths' => $imagePaths,

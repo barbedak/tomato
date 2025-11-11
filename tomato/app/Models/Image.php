@@ -14,7 +14,7 @@ class Image extends Model
         return $this->morphTo();
     }
 
-    public function getImgUrlAttribute() : string
+    public function getUrlAttribute() : string
 //        кастомный аттрибут img_url
     {
         return Storage::disk('public')->url($this->path);

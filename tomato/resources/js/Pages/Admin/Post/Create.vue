@@ -94,7 +94,7 @@ export default {
             //.finally() в любом случае
         },
         selectFile(e) {
-            this.entries.post.images = e.target.files
+            this.entries.images = e.target.files
         }
     }
 }

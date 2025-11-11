@@ -1,5 +1,11 @@
 <template>
     <div>
+        <div class="text-xs mb-4">
+            <Link class="inline-block px-3 py-2 bg-sky-600 border border-sky-700 text-white"
+                  :href="route('admin.posts.index')">
+                Back
+            </Link>
+        </div>
         <div class="bg-white p-4 border border-gray-200">
             <div class="text-lg mb-4">
                 <h1>
@@ -21,13 +27,15 @@
             </div>
             <div class="text-grey-700">
                 <h3>Tags:</h3>
-                {{post.tags}}
+                {{ post.tags }}
             </div>
-            <div class="text-grey-700 flex">
-                <div v-for="image in post.images" class="p-2">
-                    <img :src="image.url" :alt="post.title" :title="post.title" width="200" height="300">
+            <template v-if="post.images.length > 0">
+                <div class="text-grey-700 flex">
+                    <div v-for="image in post.images" class="p-2 w-1/6">
+                        <img :src="image.url" :alt="post.title" :title="post.title">
+                    </div>
                 </div>
-            </div>
+            </template>
         </div>
         <div>
             <h3>Comments:</h3>

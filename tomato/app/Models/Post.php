@@ -171,16 +171,17 @@ class Post extends Model
         return Storage::disk('public')->url($this->image_path);
     }
 
-    public function getTagsTitlesAttribute(): string
+    public function getTagsAsStringAttribute(): string
     {
-        $tagsTitles = "";
-        $tags = TagResource::collection($this->tags)->resolve();
-        if (!empty($tags)) {
-            foreach ($tags as $tag) {
-                $tagsTitles .= $tag['title']. ',';
-            }
-        }
-        return rtrim($tagsTitles, ',');
+//        $tagsTitles = "";
+//        $tags = TagResource::collection($this->tags)->resolve();
+//        if (!empty($tags)) {
+//            foreach ($tags as $tag) {
+//                $tagsTitles .= $tag['title']. ',';
+//            }
+//        }
+//        return rtrim($tagsTitles, ',');
+        return implode(', ', $this->tags->pluck('title')->toArray());
     }
 
 }

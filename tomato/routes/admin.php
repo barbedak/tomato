@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Middleware\IsAdminMiddleware;
@@ -15,8 +16,8 @@ Route::group(['prefix'=>'admin', 'middleware'=>['auth', IsAdminMiddleware::class
     Route::get('posts/create', [PostController::class, 'create'])->name('admin.posts.create');
     Route::post('posts', [PostController::class, 'store'])->name('admin.posts.store');
     Route::get('posts/{post}', [PostController::class, 'show'])->name('admin.posts.show');
-    Route::post('posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
     Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
+    Route::patch('posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
     Route::get('comments', [CommentController::class, 'index'])->name('admin.comments.index');
     Route::get('comments/{comment}', [CommentController::class, 'show'])->name('admin.comments.show');
     Route::get('categories', [CategoryController::class, 'index'])->name('admin.categories.index');
@@ -27,5 +28,6 @@ Route::group(['prefix'=>'admin', 'middleware'=>['auth', IsAdminMiddleware::class
     Route::get('roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
     Route::post('roles', [RoleController::class, 'store'])->name('admin.roles.store');
     Route::get('roles/{role}', [RoleController::class, 'show'])->name('admin.roles.show');
+    Route::delete('images/{image}', [ImageController::class, 'destroy'])->name('admin.images.destroy');
 });
 
