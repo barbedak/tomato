@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Tag extends Model
 {
     use HasFactory, softDeletes;
+    protected $guarded = false;
 
     public function posts(): BelongsToMany
     {

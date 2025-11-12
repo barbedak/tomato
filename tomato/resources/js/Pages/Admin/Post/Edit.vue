@@ -49,7 +49,6 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link} from "@inertiajs/vue3";
-import {castArray} from "concurrently/dist/src/utils.js";
 
 export default {
     name: "Edit",
@@ -70,7 +69,6 @@ export default {
             entries: {
                 post: this.post,
                 tags: this.post.tags,
-                images: [],
                 _method: "PATCH",
             }
         }

@@ -56,7 +56,6 @@ class PostController extends Controller
 
     public function update(Post $post, UpdateRequest $request)
     {
-        dd($request);
         $data = $request->validated();
         $post = PostService::update($post, $data);
         return inertia('Admin/Post/Show', compact('post'));

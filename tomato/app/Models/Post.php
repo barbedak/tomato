@@ -62,6 +62,7 @@ use Storage;
 class Post extends Model
 {
     use HasFactory, SoftDeletes, HasLog, HasFilter;
+    protected $guarded = false;
 
 //    protected static function bootHasLog()
 //    {

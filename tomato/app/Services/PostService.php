@@ -35,15 +35,15 @@ class PostService
         try {
             DB::beginTransaction();
             $post->update($data['post']);
-//            if (array_key_exists('images', $data)) {
+            if (array_key_exists('images', $data)) {
                 ImageService::storeBatch($post, $data['images']);
-//            }
+            }
 
 
             $tagsArr = explode(',', $data['tags']);
             $tags = TagService::storeBatch($tagsArr);
 
-            $post->tags()->sync(array_column($tags, 'id'));// неправильно
+            $post->tags()->sync(array_column($tags, 'id'));
 
 
             DB::commit();

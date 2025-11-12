@@ -1,10 +1,18 @@
 <template>
     <div>
-        <div class="text-xs mb-4">
-            <Link class="inline-block px-3 py-2 bg-sky-600 border border-sky-700 text-white"
-                  :href="route('admin.posts.index')">
-                Back
-            </Link>
+        <div class="text-xs mb-4 flex">
+            <div class="inline-block pr-2">
+                <Link class="inline-block px-3 py-2 bg-sky-600 border border-sky-700 text-white"
+                      :href="route('admin.posts.index')">
+                    Back
+                </Link>
+            </div>
+            <div class="inline-block">
+                <Link class="inline-block px-3 py-2 bg-sky-600 border border-sky-700 text-white"
+                      :href="route('admin.posts.edit', post.id)">
+                    EDIT
+                </Link>
+            </div>
         </div>
         <div class="bg-white p-4 border border-gray-200">
             <div class="text-lg mb-4">
