@@ -20,7 +20,12 @@ class PostController extends Controller
     public function index(IndexRequest $request)
     {
         $data = $request->validated();
-        $posts = PostResource::collection(Post::filter($data)->latest()->get())->resolve();
+//        $posts = PostResource::collection(Post::filter($data)->latest()->get())->resolve(); просто фильтр
+        $data['filter'] = $data['filter'] ?? [];
+        $posts = PostResource::collection(
+            Post::filter($data['filter'])->latest()->
+            paginate($data['pagination']['per_page'], '*', 'page', $data['pagination']['page'])->onEachSide(2)
+        );
         //для асинхронных запросов возвращаем объекты, а не страницу
         if (Request::wantsJson()) {
             return $posts;

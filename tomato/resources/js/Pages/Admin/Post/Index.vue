@@ -8,9 +8,10 @@
         </div>
         <div class="mb-4 flex justify-between items-center">
             <div>
-                <input @blur="checkIsEmptyTitle" v-model.lazy="filter.title" class="border border-grey-200" type="text" placeholder="title">
+                <input @blur="checkIsEmptyTitle" v-model.lazy="filter.title" class="border border-grey-200" type="text"
+                       placeholder="title">
             </div>
-            <div >
+            <div>
                 <select v-model.lazy="filter.category_title" class="border border-grey-200">
                     <option value="null">Выберите категорию</option>
                     <option v-for="category in categories" :value="category.title"> {{ category.title }}</option>
@@ -20,12 +21,22 @@
                 <input v-model.lazy="filter.published_at_from" class="border border-grey-200" type="date">
             </div>
             <div>
-                <input v-model.lazy="filter.views_from" class="border border-grey-200" type="number" placeholder="title">
+                <input v-model.lazy="filter.views_from" class="border border-grey-200" type="number"
+                       placeholder="title">
             </div>
             <div v-if="Object.keys(filter).length > 0">
                 <a @click.prevent="filter = {}" href="#"
                    class="inline-block px-3 py-2 bg-emerald-600 border border-emerald-700 text-white text-xs"
                 >CLEAR</a>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div>
+                <a class="inline-block mr-2 px-2 border border-gray-200 bg-white text-gray-600"
+                   :class="{'bg-blue-300': link.active, '!text-gray-300': !link.url}"
+                   v-for="link in postsData.meta.links"
+                   @click="pagination.page = link.label"
+                   href="#" v-html="link.label"></a>
             </div>
         </div>
         <div>
@@ -38,7 +49,7 @@
                 </tr>
                 </thead>
                 <tbody class="text-gray-600">
-                <tr v-for="post in postsData">
+                <tr v-for="post in postsData.data">
                     <td class="p-4 border-b border-r border-gray-200 text-center">{{ post.id }}</td>
                     <td class="p-4 border-b border-r border-gray-200">{{ post.title }}</td>
                     <td class="p-4 border-b border-gray-200">
@@ -82,6 +93,7 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 </template>
 
@@ -111,19 +123,20 @@ export default {
         return {
             postsData: this.posts,
             filter: {},
+            pagination: {},
         }
     },
 
     methods: {
-        checkIsEmptyTitle(){
-            if (this.filter.title === ''){
+        checkIsEmptyTitle() {
+            if (this.filter.title === '') {
                 delete this.filter.title
                 // delete this.filter['title']
             }
         },
         getPosts() {
             axios.get(route('admin.posts.index'), {
-                params: this.filter
+                params: {filter: this.filter, pagination: this.pagination}
             })
                 .then(res => {
                     this.postsData = res.data
@@ -138,9 +151,17 @@ export default {
         }
     },
 
-    watch:{
+    watch: {
         filter: {
-            handler(){
+            handler() {
+                this.pagination.page = 1
+                this.getPosts()
+            },
+            deep: true
+        },
+
+        pagination: {
+            handler() {
                 this.getPosts()
             },
             deep: true

@@ -15,7 +15,7 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         $tags = Tag::all();
-        $posts = Post::factory(5)->create();
+        $posts = Post::factory(100)->create();
         foreach ($posts as $post) {
             $tagIds = $tags->random(fake()->numberBetween(1, 5))->pluck('id');
             $post->tags()->sync($tagIds);

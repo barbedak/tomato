@@ -17,17 +17,17 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-            RoleSeeder::class,
-            UserSeeder::class,
-            TagSeeder::class,
-            CategorySeeder::class,
+//            RoleSeeder::class,
+//            UserSeeder::class,
+//            TagSeeder::class,
+//            CategorySeeder::class,
             PostSeeder::class,
 
 //            CommentSeeder::class,
 //            GroupSeeder::class,
 //            ThemeSeeder::class,
 //            ThemeMessageSeeder::class,
-            VideoSeeder::class,
+//            VideoSeeder::class,
         ]);
     }
 }
