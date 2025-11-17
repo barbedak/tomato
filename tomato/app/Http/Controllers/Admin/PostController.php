@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Post\IndexRequest;
 use App\Http\Requests\Admin\Post\StoreRequest;
 use App\Http\Requests\Admin\Post\UpdateRequest;
 use App\Http\Resources\Category\CategoryResource;
@@ -10,16 +11,22 @@ use App\Http\Resources\Post\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Request;
 use Storage;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(IndexRequest $request)
     {
-//        $posts = PostResource::collection(Post::all())->resolve();
-        $posts = PostResource::collection(Post::latest()->get())->resolve();
-        return inertia('Admin/Post/Index', compact('posts'));
+        $data = $request->validated();
+        $posts = PostResource::collection(Post::filter($data)->latest()->get())->resolve();
+        //для асинхронных запросов возвращаем объекты, а не страницу
+        if (Request::wantsJson()) {
+            return $posts;
+        }
+        $categories = CategoryResource::collection(Category::all())->resolve();
+        return inertia('Admin/Post/Index', compact('posts', 'categories'));
     }
 
     public function show(Post $post)
@@ -59,5 +66,13 @@ class PostController extends Controller
         $data = $request->validated();
         $post = PostService::update($post, $data);
         return inertia('Admin/Post/Show', compact('post'));
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return response()->json([
+            'message' => 'Post deleted successfully'
+        ], Response::HTTP_OK);
     }
 }
