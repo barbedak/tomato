@@ -33,9 +33,9 @@
         <div class="mb-4">
             <div>
                 <a class="inline-block mr-2 px-2 border border-gray-200 bg-white text-gray-600"
-                   :class="{'bg-blue-300': link.active, '!text-gray-300': !link.url}"
+                   :class="{'bg-blue-400': link.active, '!text-gray-300 cursor-default': !link.url}"
                    v-for="link in postsData.meta.links"
-                   @click="pagination.page = link.label"
+                   @click="paginationPage(link)"
                    href="#" v-html="link.label"></a>
             </div>
         </div>
@@ -128,12 +128,23 @@ export default {
     },
 
     methods: {
+        paginationPage(link) {
+            if (link.label.includes('Previous') && this.postsData.meta.current_page > 1) {
+                this.pagination.page = this.postsData.meta.current_page - 1
+            } else if (link.label.includes('Next') && this.postsData.meta.current_page < this.postsData.meta.last_page) {
+                this.pagination.page = this.postsData.meta.current_page + 1
+            } else {
+                this.pagination.page = link.label
+            }
+        },
+
         checkIsEmptyTitle() {
             if (this.filter.title === '') {
                 delete this.filter.title
                 // delete this.filter['title']
             }
         },
+
         getPosts() {
             axios.get(route('admin.posts.index'), {
                 params: {filter: this.filter, pagination: this.pagination}
@@ -143,10 +154,11 @@ export default {
                 });
 
         },
+
         deletePost(post) {
             axios.delete(route('admin.posts.destroy', post.id))
                 .then(res => {
-                    this.postsData = this.postsData.filter(postItem => postItem.id !== post.id);
+                    this.postsData.data = this.postsData.data.filter(postItem => postItem.id !== post.id);
                 })
         }
     },

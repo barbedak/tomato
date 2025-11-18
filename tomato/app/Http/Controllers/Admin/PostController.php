@@ -12,8 +12,8 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
-use Storage;
 
 class PostController extends Controller
 {
@@ -21,11 +21,15 @@ class PostController extends Controller
     {
         $data = $request->validated();
 //        $posts = PostResource::collection(Post::filter($data)->latest()->get())->resolve(); просто фильтр
-        $data['filter'] = $data['filter'] ?? [];
-        $posts = PostResource::collection(
-            Post::filter($data['filter'])->latest()->
-            paginate($data['pagination']['per_page'], '*', 'page', $data['pagination']['page'])->onEachSide(2)
-        );
+        $key = serialize($data);
+
+        $posts = Cache::remember($key, now()->addMinutes(10), function () use ($data) {
+            return PostResource::collection(
+                Post::filter($data['filter'])->latest()->
+                paginate($data['pagination']['per_page'], '*', 'page', $data['pagination']['page'])->onEachSide(2)
+            );
+        });
+
         //для асинхронных запросов возвращаем объекты, а не страницу
         if (Request::wantsJson()) {
             return $posts;
@@ -56,6 +60,7 @@ class PostController extends Controller
         $data = $request->validated();
 //        $data = $request->validated();
         $post = PostService::store($data);
+        Cache::flush();
         return PostResource::make($post)->resolve();
     }
 
@@ -63,6 +68,7 @@ class PostController extends Controller
     {
         $post = PostResource::make($post)->resolve();
         $categories = CategoryResource::collection(Category::all())->resolve();
+        Cache::flush();
         return inertia('Admin/Post/Edit', compact('post', 'categories'));
     }
 
@@ -70,12 +76,14 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $post = PostService::update($post, $data);
+        Cache::flush();
         return inertia('Admin/Post/Show', compact('post'));
     }
 
     public function destroy(Post $post)
     {
         $post->delete();
+        Cache::flush();
         return response()->json([
             'message' => 'Post deleted successfully'
         ], Response::HTTP_OK);
