@@ -21,18 +21,17 @@ class IndexRequest extends FormRequest
             'filter.published_at_from' => 'nullable||date_format:Y-m-d H:i:s',
             'filter.views_from' => 'nullable|integer',
             'filter.views_to' => 'nullable|integer',
-            'filter.null' => 'nullable|string',
 
             'pagination.page' => 'required|integer',
             'pagination.per_page' => 'required|integer',
         ];
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->merge([
             'filter' => [
-                'null' => ''
+                'title' => $this->filter['title'] ?? '',
             ],
 
             'pagination' => [

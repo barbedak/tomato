@@ -7,19 +7,37 @@
                     Back
                 </Link>
             </div>
+            <div v-if="isSuccess" class="mb-4 p-4 bg-emerald-500 text-white">
+                SUCCESS
+            </div>
             <div>
                 <div class="mb-4">
                     <input v-model="entries.post.title" class="border border-gray-200 p-4 w-full" type="text"
                            placeholder="title">
+                    <div v-if="errors['post.title']" class="text-red-400">
+                        <div v-for="error in errors['post.title']">
+                            {{ error }}
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-4">
                     <textarea v-model="entries.post.body" class="border border-gray-200 p-4 w-full" placeholder="body"/>
+                    <div v-if="errors['post.body']" class="text-red-400">
+                        <div v-for="error in errors['post.body']">
+                            {{ error }}
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-4">
                     <select v-model="entries.post.category_id" class="border border-gray-200 p-4 w-full">
-                        <option value="null">Выберите категорию</option>
+                        <option value="0">Выберите категорию</option>
                         <option v-for="category in categories" :value="category.id"> {{ category.title }}</option>
                     </select>
+                    <div v-if="errors['post.category_id']" class="text-red-400">
+                        <div v-for="error in errors['post.category_id']">
+                            {{ error }}
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-4">
                     <input ref="files_input" multiple @change="selectFile" class="border border-gray-200 p-4 w-full"
@@ -41,6 +59,7 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link} from "@inertiajs/vue3";
+import {nextTick} from "vue";
 
 export default {
     name: "Create",
@@ -61,10 +80,12 @@ export default {
                 post: {
                     title: '',
                     body: '',
-                    category_id: null
+                    category_id: 0
                 },
-                tags:  '',
-            }
+                tags: '',
+            },
+            isSuccess: false,
+            errors: []
         }
     },
 
@@ -85,18 +106,35 @@ export default {
                         post: {
                             title: '',
                             body: '',
-                            category_id: null
+                            category_id: 0
                         },
-                        tags:  '',
+                        tags: '',
                     }
+                    this.$nextTick(() => {
+                        this.isSuccess = true
+                    })
                 })//успех
-            // .catch(e) ошибка запроса
+                .catch(e => {
+                    this.isSuccess = false
+                    this.errors = e.response.data.errors
+                })
             //.finally() в любом случае
         },
         selectFile(e) {
             this.entries.images = e.target.files
         }
+    },
+
+    watch: {
+        entries: {
+            handler() {
+                this.isSuccess = false
+                this.errors = []
+            },
+            deep: true
+        }
     }
+
 }
 </script>
 <style scoped>

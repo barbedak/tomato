@@ -83,7 +83,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        Cache::flush();
+        Cache::flush(); //сделать через Observer
         return response()->json([
             'message' => 'Post deleted successfully'
         ], Response::HTTP_OK);

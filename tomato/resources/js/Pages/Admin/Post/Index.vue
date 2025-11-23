@@ -8,7 +8,7 @@
         </div>
         <div class="mb-4 flex justify-between items-center">
             <div>
-                <input @blur="checkIsEmptyTitle" v-model.lazy="filter.title" class="border border-grey-200" type="text"
+                <input @blur="checkIsFilterEmpty" v-model.lazy="filter.title" class="border border-grey-200" type="text"
                        placeholder="title">
             </div>
             <div>
@@ -24,8 +24,8 @@
                 <input v-model.lazy="filter.views_from" class="border border-grey-200" type="number"
                        placeholder="title">
             </div>
-            <div v-if="Object.keys(filter).length > 0">
-                <a @click.prevent="filter = {}" href="#"
+            <div v-if="this.isFilterSet">
+                <a @click.prevent="clearFilter()" href="#"
                    class="inline-block px-3 py-2 bg-emerald-600 border border-emerald-700 text-white text-xs"
                 >CLEAR</a>
             </div>
@@ -33,7 +33,7 @@
         <div class="mb-4">
             <div>
                 <a class="inline-block mr-2 px-2 border border-gray-200 bg-white text-gray-600"
-                   :class="{'bg-blue-400': link.active, '!text-gray-300 cursor-default': !link.url}"
+                   :class="{'bg-blue-500': link.active, '!text-gray-300 cursor-default': !link.url}"
                    v-for="link in postsData.meta.links"
                    @click="paginationPage(link)"
                    href="#" v-html="link.label"></a>
@@ -122,12 +122,36 @@ export default {
     data() {
         return {
             postsData: this.posts,
-            filter: {},
+            filter: {
+                title: '',
+                category_title: '',
+                published_at_from: '',
+                views_from: '',
+            },
+
             pagination: {},
+            isFilterSet: false,
         }
     },
 
     methods: {
+        checkIsFilterEmpty() {
+            this.isFilterSet = false;
+            for (let key in this.filter){
+                if (this.filter[key] !== ''){
+                    this.isFilterSet = true
+                }
+            }
+        },
+
+        clearFilter() {
+            this.isFilterSet = false
+            this.filter['title'] = ''
+            this.filter['category_title'] = ''
+            this.filter['published_at_from'] = ''
+            this.filter['views_from'] = ''
+        },
+
         paginationPage(link) {
             if (link.label.includes('Previous') && this.postsData.meta.current_page > 1) {
                 this.pagination.page = this.postsData.meta.current_page - 1
@@ -135,13 +159,6 @@ export default {
                 this.pagination.page = this.postsData.meta.current_page + 1
             } else {
                 this.pagination.page = link.label
-            }
-        },
-
-        checkIsEmptyTitle() {
-            if (this.filter.title === '') {
-                delete this.filter.title
-                // delete this.filter['title']
             }
         },
 
