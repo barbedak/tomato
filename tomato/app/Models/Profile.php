@@ -59,6 +59,10 @@ class Profile extends Model
     {
         return $this->hasMany(Group::class, 'group_members');
     }
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'profile_id');
+    }
 
     public function likedPosts()
     {
