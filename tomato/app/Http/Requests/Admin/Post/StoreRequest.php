@@ -37,19 +37,11 @@ class StoreRequest extends FormRequest
         ]);
     }
 
-    protected function passedValidation()
-//        добавление значений после валидации
-//    в контроллере нужно использовать validationData() вместо validated()
+    public function messages()
     {
-//        $imagePaths = [];
-//        foreach ($this->images as $image) {
-//
-//            $imagePaths[] = Storage::disk('public')->put('/images', $image);
-//        }
-//        return $this->merge([
-//            'image_paths' => $imagePaths,
-//        ]);
-//; для одного файла
-
+        return [
+            'post.title.required' => 'Это поле необходимо для заполнения',
+            'post.category_id.exists' => 'Необходимо выбрать категорию',
+        ];
     }
 }
