@@ -4,16 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad824479-5c1b-4150-8073-d66c7c10cbfb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/tomato/app/Http/Controllers/Admin/PostController.php" beforeDir="false" afterPath="$PROJECT_DIR$/tomato/app/Http/Controllers/Admin/PostController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tomato/app/Http/Requests/Admin/Post/IndexRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tomato/app/Http/Requests/Admin/Post/IndexRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tomato/resources/js/Pages/Admin/Post/Create.vue" beforeDir="false" afterPath="$PROJECT_DIR$/tomato/resources/js/Pages/Admin/Post/Create.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tomato/resources/js/Pages/Admin/Post/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/tomato/resources/js/Pages/Admin/Post/Index.vue" afterDir="false" />
-    </list>
+    <list default="true" id="ad824479-5c1b-4150-8073-d66c7c10cbfb" name="Changes" comment="﻿Merge branch 'master' of https://github.com/barbedak/tomato&#10;# Please enter a commit message to explain why this merge is necessary,&#10;# especially if it merges an updated upstream into a topic branch.&#10;#&#10;# Lines starting with '#' will be ignored, and an empty message aborts&#10;# the commit." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/tomato_client/composer.json" />
+    </option>
   </component>
   <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/tomato/composer.json</pharConfigPath>
@@ -34,7 +34,7 @@
     &quot;accountId&quot;: &quot;c21b2d8d-a729-49a3-90ce-d0e2f3895ce6&quot;
   }
 }</component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:/xampp/php/php.exe">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../xampp/php/php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/tomato/vendor/guzzlehttp/uri-template" />
       <path value="$PROJECT_DIR$/tomato/vendor/doctrine/deprecations" />
@@ -183,24 +183,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="PestRunConfigurationType">
       <option name="pestRunnerSettings">
         <PestRunner configuration_file="$PROJECT_DIR$/tomato/phpunit.xml" scope="ConfigurationFile" use_alternative_configuration_file="true" />
+      </option>
+      <option name="runnerSettings">
+        <PhpTestRunnerSettings configuration_file="$PROJECT_DIR$/tomato/phpunit.xml" scope="ConfigurationFile" use_alternative_configuration_file="true" />
       </option>
       <method v="2" />
     </configuration>
@@ -227,5 +230,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="hmwork 23" />
+    <option name="LAST_COMMIT_MESSAGE" value="hmwork 23" />
   </component>
 </project>

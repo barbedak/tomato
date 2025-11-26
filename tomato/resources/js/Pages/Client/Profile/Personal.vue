@@ -1,22 +1,7 @@
 <template>
     <div>
         <div>
-            <div v-for="post in posts" class="bg-white mb-4 p-4 border border-gray-200">
-                <h3 class="text-lg mb-2">
-
-                    <Link :href="route('client.posts.show', post)">{{ post.title }}</Link>
-                </h3>
-                <p class="text-gray-600">
-                    {{ post.description }}
-                </p>
-            </div>
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                </svg>
-
-            </div>
+            <ItemPost v-for="post in postsData" @deletePost="deletePost" :post="post"></ItemPost>
         </div>
     </div>
 </template>
@@ -25,17 +10,37 @@
 
 import ClientLayout from "@/Layouts/ClientLayout.vue";
 import {Link} from "@inertiajs/vue3";
+import ItemPost from "@/Components/Post/ItemPost.vue";
 
 export default {
     name: "Personal",
-    components: {Link},
+    components: {ItemPost, Link},
     layout: ClientLayout,
 
-    props:{
-       posts: {
-           type: Array,
-           required: false,
-       }
+    props: {
+        posts: {
+            type: Array,
+            required: false,
+        }
+    },
+
+    data() {
+        return {
+            postsData: this.posts
+        }
+    },
+
+    // модно использовать во всех потомках напрямую, не прокидывая
+    provide() {
+      return {
+          greeting: 'hello from parent'
+      }
+    },
+
+    methods: {
+        deletePost(post) {
+            this.postsData = this.postsData.filter(p => p.id !== post.id)
+        }
     }
 }
 </script>

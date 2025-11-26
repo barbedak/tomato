@@ -34,6 +34,8 @@ class PostResource extends JsonResource
 //            'img_url' => $this->img_url,
             'images' => ImageResource::collection($this->images)->resolve(),
             'tags' => $this->tags_as_string,
+            'is_liked' => $this->is_liked,
+            'liked_by_profiles_count' => $this->liked_by_profiles_count
 
         ];
     }

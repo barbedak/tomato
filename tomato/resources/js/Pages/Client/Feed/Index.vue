@@ -1,16 +1,7 @@
 <template>
     <div>
         <div>
-            <div v-for="post in posts" class="bg-white mb-4 p-4 border border-gray-200">
-                <h3 class="text-lg mb-2">
-
-                    <Link :href="route('client.posts.show', post)">{{ post.title }}</Link>
-                </h3>
-                <p class="text-gray-600">
-                    {{ post.description }}
-                </p>
-
-            </div>
+            <ItemPost v-for="post in posts" :post="post"></ItemPost>
         </div>
     </div>
 </template>
@@ -19,10 +10,11 @@
 
 import ClientLayout from "@/Layouts/ClientLayout.vue";
 import {Link} from "@inertiajs/vue3";
+import ItemPost from "@/Components/Post/ItemPost.vue";
 
 export default {
     name: "Index",
-    components: {Link},
+    components: {ItemPost, Link},
     layout: ClientLayout,
 
     props: {
@@ -30,6 +22,10 @@ export default {
             type: Array,
             required: false,
         }
+    },
+
+    methods: {
+
     }
 }
 </script>

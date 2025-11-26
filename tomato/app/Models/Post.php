@@ -63,6 +63,8 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes, HasLog, HasFilter;
     protected $guarded = false;
+    protected $withCount =['likedByProfiles']; // liked_by_profiles_count
+
 
 //    protected static function bootHasLog()
 //    {
@@ -156,7 +158,7 @@ class Post extends Model
         return $this->profile->user();
     }
 
-    public function likes()
+    public function likedByProfiles()
     {
         return $this->morphToMany(Profile::class, 'likeable', 'likeables');
     }
@@ -185,4 +187,8 @@ class Post extends Model
         return implode(', ', $this->tags->pluck('title')->toArray());
     }
 
+    public function getIsLikedAttribute() :bool
+    {
+        return $this->likedByProfiles->contains(auth()->user()->profile);
+    }
 }
