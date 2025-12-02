@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\Post\StoreCommentRequest;
+use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Response;
@@ -17,10 +19,12 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $comments=CommentResource::collection($post->comments)->resolve();
 //        $post = $post->toResource();
 //        или
+
         $post = PostResource::make($post)->resolve();
-        return inertia('Client/Post/Show', compact('post'));
+        return inertia('Client/Post/Show', compact('post', 'comments'));
     }
 
     public function destroy(Post $post)
@@ -34,5 +38,12 @@ class PostController extends Controller
     {
         auth()->user()->profile->likedPosts()->toggle($post->id); //меняем в базе, для актуализации объекта нужно вызвать fresh()
         return PostResource::make($post->fresh())->resolve();
+    }
+
+    public function storeComment(Post $post, StoreCommentRequest $request)
+    {
+        $data = $request->validated();
+        $comment = $post->comments()->create($data);
+        return CommentResource::make($comment)->resolve();
     }
 }

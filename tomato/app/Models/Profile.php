@@ -68,6 +68,10 @@ class Profile extends Model
     {
         return $this->morphedByMany(Post::class, 'likeable');
     }
+    public function likedComments()
+    {
+        return $this->morphedByMany(Comment::class, 'likeable');
+    }
 
     public function likedVideos()
     {

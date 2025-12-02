@@ -1,6 +1,5 @@
 <template>
     <div class="bg-white mb-4 p-4 border border-gray-200">
-        {{ this.greeting }}
         <h3 class="text-lg mb-2">
             <Link v-if="!route().current('client.posts.show') " :href="route('client.posts.show', post)">
                 {{ post.title }}
@@ -43,7 +42,7 @@ export default {
     },
 
     // объявлен в далеком родителе
-    inject: ['greeting'],
+    // inject: ['greeting'],
 
     methods: {
         toggleLike() {

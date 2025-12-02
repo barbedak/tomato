@@ -42,6 +42,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     use HasFactory, SoftDeletes, HasLog, HasFilter;
+    protected $guarded = false;
+    protected $withCount =['likedByProfiles'];
 
     public function category(): BelongsTo
     {
@@ -68,4 +70,23 @@ class Comment extends Model
         return $this->belongsTo(Profile::class);
     }
 
+    public function likedByProfiles()
+    {
+        return $this->morphToMany(Profile::class, 'likeable', 'likeables');
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->profile->name;
+    }
+
+    public function getFormattedDateAttribute()
+    {
+        return $this->created_at->diffForHumans();
+    }
+
+    public function getIsLikedAttribute() :bool
+    {
+        return $this->likedByProfiles->contains(auth()->user()->profile);
+    }
 }

@@ -31,11 +31,11 @@ export default {
     },
 
     // модно использовать во всех потомках напрямую, не прокидывая
-    provide() {
-      return {
-          greeting: 'hello from parent'
-      }
-    },
+    // provide() {
+    //   return {
+    //       greeting: 'hello from parent'
+    //   }
+    // },
 
     methods: {
         deletePost(post) {

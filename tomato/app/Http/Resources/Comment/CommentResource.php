@@ -17,10 +17,11 @@ class CommentResource extends JsonResource
         return [
             'id' => $this->id,
             'body' => $this->body,
-            'profile_id' => $this->profile_id,
-            'profile_name' => $this->profile->name,
-            'user_name' => $this->profile->user->name,
-            'commentable' => $this->commentable //лучше не делать
+            'parent_id' => $this->parent_id,
+            'name' => $this->name,
+            'formatted_date' => $this->formatted_date,
+            'is_liked' => $this->is_liked,
+            'liked_by_profiles_count' => $this->liked_by_profiles_count
         ];
     }
 }
