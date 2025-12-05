@@ -4,7 +4,7 @@ namespace App\Http\Requests\Client\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ShowPostRequest extends FormRequest
+class IndexCommentRequest extends FormRequest
 {
 
     /**

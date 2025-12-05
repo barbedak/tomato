@@ -15,6 +15,11 @@ class CommentController extends Controller
         return inertia('Client/Comment/Index', compact('comments'));
     }
 
+    public function indexReplies(Comment $comment)
+    {
+        return CommentResource::collection($comment->replies()->withCount('replies')->get())->resolve();
+    }
+
     public function toggleLike(Comment $comment)
     {
         auth()->user()->profile->likedComments()->toggle($comment->id); //меняем в базе, для актуализации объекта нужно вызвать fresh()

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Client\Post\ShowPostRequest;
+use App\Http\Requests\Client\Post\IndexCommentRequest;
 use App\Http\Requests\Client\Post\StoreCommentRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
@@ -18,21 +18,17 @@ class PostController extends Controller
         return inertia('Client/Post/Index', compact('posts'));
     }
 
-    public function show(Post $post, ShowPostRequest $request)
+    public function show(Post $post)
     {
-//        $comments=CommentResource::collection($post->comments)->resolve(); //->resolve() возвращает массив
-        $data = $request->validationData();
-        $comments = CommentResource::collection(
-            $post->comments()->paginate(5, '*', 'page', $data['page'])
-        );
 
 //        $post = $post->toResource();
 //        или
+        $comments = CommentResource::collection(
+            $post->comments()->whereNull('parent_id')->withCount('replies')
+                ->paginate(5, '*', 'page', 1)
+        );
 
         $post = PostResource::make($post)->resolve();
-        if ($request->wantsJson()) {
-            return $comments;
-        }
         return inertia('Client/Post/Show', compact('post', 'comments'));
     }
 
@@ -55,5 +51,15 @@ class PostController extends Controller
         $data = $request->validated();
         $comment = $post->comments()->create($data);
         return CommentResource::make($comment)->resolve();
+    }
+
+    public function indexComment(Post $post, IndexCommentRequest $request)
+    {
+//        $comments=CommentResource::collection($post->comments)->resolve(); //->resolve() возвращает массив
+        $data = $request->validationData();
+        $comments = $post->comments()->whereNull('parent_id')->withCount('replies');
+        return CommentResource::collection(
+            $comments->paginate(5, '*', 'page', $data['page'])
+        );
     }
 }
