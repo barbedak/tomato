@@ -1,6 +1,8 @@
 <template>
     <div class="">
+        <div class="text-sm text-gray-300 mr-2"> {{ comment.id }} </div>
         <div class="flex justify-between">
+
             <div>
                 <h3 class="text-lg text-gray-700">{{ comment.body }}</h3>
             </div>
@@ -35,7 +37,7 @@
             </div>
         </div>
         <div v-if="replies.length > 0" class="pl-4">
-            <ItemComment v-for="reply in replies" @createReplay="createReplay" :comment="reply"></ItemComment>
+            <ItemComment ref="itemCommentRef" v-for="reply in replies" @createReplay="createReplay" :comment="reply"></ItemComment>
         </div>
     </div>
 </template>
@@ -67,6 +69,7 @@ export default {
                     this.comment.liked_by_profiles_count = res.data.liked_by_profiles_count
                 })
         },
+
         createReplay(comment) {
             this.$emit('createReplay', comment)
         },

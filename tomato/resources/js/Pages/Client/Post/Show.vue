@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div v-if="is_show">
-                <a href="#" @click.prevent="getPaginateComments"
+                <a href="#" @click.prevent="getComments(++this.page)"
                    class="block py-4 bg-sky-700 border-sky-800 text-white text-center">We need more
                     comments...</a>
             </div>
@@ -84,31 +84,29 @@ export default {
 
     methods: {
         storeComment() {
-            axios.post(route('client.posts.comments.index', this.post.id), this.comment)
+            axios.post(route('client.posts.comments.store', this.post.id), this.comment)
                 .then(res => {
-                    this.getComments()
+                    this.getComments(this.page)
                     this.comment.body = ''
                     this.clearReplayFor()
                 })
         },
 
-        getPaginateComments() {
-            axios.get(route('client.posts.comments.index', this.post), {
+        getComments(page) {
+            axios.get(route('client.posts.comments.index', this.post.id), {
                 params: {
-                    page: ++this.page
+                    page: page
                 }
             })
                 .then(res => {
                     this.is_show = res.data.meta.to < res.data.meta.total
-                    this.commentsData.data = [...this.commentsData.data, ...res.data.data]
-                })
-        },
 
-        getComments(){
-            axios.get(route('client.posts.comments.index', this.post.id))
-                .then(res => {
-                    console.log(res);
-                    this.commentsData.data = res.data.data
+                    this.commentsData.data = this.commentsData.data.concat(res.data.data);
+                    const uniqueMap = new Map();
+                    this.commentsData.data.forEach(obj => {
+                        uniqueMap.set(obj.id, obj);
+                    });
+                    this.commentsData.data = Array.from(uniqueMap.values());
                 })
         },
 
