@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <div class="text-sm text-gray-300 mr-2"> {{ comment.id }} </div>
+        <div class="text-sm text-gray-300 mr-2"> {{ comment.id }}</div>
         <div class="flex justify-between">
 
             <div>
@@ -22,7 +22,7 @@
         </div>
         <div class="flex mb-4 pb-2 border-b border-gray-200 justify-between">
             <div>
-                <a v-if="comment.replies_count" href="#" @click.prevent="getReplies" class="text-sky-600 text-xs">
+                <a v-if="comment.replies_count" href="#" @click.prevent="getReplies()" class="text-sky-600 text-xs">
                     Show replies ({{ comment.replies_count }})</a>
             </div>
             <div class="flex items-center gap-2">
@@ -37,7 +37,8 @@
             </div>
         </div>
         <div v-if="replies.length > 0" class="pl-4">
-            <ItemComment ref="itemCommentRef" v-for="reply in replies" @createReplay="createReplay" :comment="reply"></ItemComment>
+            <ItemComment v-for="reply in replies" @createReplay="createReplay"
+                         :comment="reply"></ItemComment>
         </div>
     </div>
 </template>

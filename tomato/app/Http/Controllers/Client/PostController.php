@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Post\IndexCommentRequest;
 use App\Http\Requests\Client\Post\StoreCommentRequest;
+use App\Http\Requests\Client\Post\StoreRepostRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
+use App\Http\Resources\Repost\RepostResource;
 use App\Models\Post;
 use Illuminate\Http\Response;
 
@@ -61,5 +63,12 @@ class PostController extends Controller
         return CommentResource::collection(
             $comments->paginate(5, '*', 'page', $data['page'])
         );
+    }
+
+    public function storeRepost(Post $post, StoreRepostRequest $request)
+    {
+        $data = $request->validated();
+        $post->reposts()->create($data);
+        return PostResource::make($post)->resolve();
     }
 }

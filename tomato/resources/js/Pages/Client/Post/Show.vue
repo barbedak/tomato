@@ -10,7 +10,7 @@
                 </div>
                 <div>
                     <ItemComment v-for="comment in commentsData.data" :comment="comment"
-                                 @createReplay="createReplay"></ItemComment>
+                                 @createReplay="createReplay" ></ItemComment>
                 </div>
             </div>
             <div v-if="is_show">
@@ -73,6 +73,7 @@ export default {
             commentsData: this.comments,
             comment: {
                 body: '',
+                parent_id: null,
             },
             page: 1,
             is_show: this.comments.meta.to < this.comments.meta.total,
@@ -86,7 +87,8 @@ export default {
         storeComment() {
             axios.post(route('client.posts.comments.store', this.post.id), this.comment)
                 .then(res => {
-                    this.getComments(this.page)
+                    // page 1 contains last stored comment
+                    this.getComments(1)
                     this.comment.body = ''
                     this.clearReplayFor()
                 })
@@ -102,10 +104,15 @@ export default {
                     this.is_show = res.data.meta.to < res.data.meta.total
 
                     this.commentsData.data = this.commentsData.data.concat(res.data.data);
-                    const uniqueMap = new Map();
+                    //convert each res.data.data elements to Proxy object
+                    let uniqueMap = new Map();
                     this.commentsData.data.forEach(obj => {
                         uniqueMap.set(obj.id, obj);
                     });
+                    //sort Map by desc
+                    uniqueMap = new Map(
+                        [...uniqueMap.entries()].sort((a, b) => b[0] - a[0])
+                    );
                     this.commentsData.data = Array.from(uniqueMap.values());
                 })
         },
@@ -118,6 +125,7 @@ export default {
 
         clearReplayFor() {
             this.replayFor.body = ''
+            this.comment.parent_id = null
         }
     }
 

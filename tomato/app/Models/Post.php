@@ -16,9 +16,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use phpDocumentor\Reflection\Types\Integer;
 use Storage;
 
 /**
@@ -123,6 +125,15 @@ class Post extends Model
         return $this->belongsTo(Profile::class);
     }
 
+    public function parent(): HasOne
+    {
+        return $this->hasOne(Post::class, 'id', 'parent_id');
+    }
+    public function reposts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'parent_id', 'id');
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
@@ -190,5 +201,10 @@ class Post extends Model
     public function getIsLikedAttribute() :bool
     {
         return $this->likedByProfiles->contains(auth()->user()->profile);
+    }
+
+    public function getRepostsCountAttribute(): int
+    {
+        return $this->reposts->count();
     }
 }

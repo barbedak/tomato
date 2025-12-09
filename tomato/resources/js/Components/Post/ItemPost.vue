@@ -1,5 +1,20 @@
 <template>
     <div class="bg-white mb-4 p-4 border border-gray-200">
+        <div v-if="isRepost" @click="isRepost = false" class="modal-shadow flex items-center justify-center">
+            <div @click.stop class="modal w-1/2 bg-white">
+                <div class="mb-4">
+                    <input class="border border-gray-200 p-4 w-full" type="text" placeholder="title"
+                           v-model="repost.title">
+                </div>
+                <div class="mb-4">
+                    <a href="#" @click.prevent="storeRepost"
+                       class="text-xs px-3 py-2 bg-sky-600 border border-sky-700 text-white">REPOST</a>
+                </div>
+            </div>
+        </div>
+        <div v-if="post.parent_id">
+            <ItemPost :post="post.parent"></ItemPost>
+        </div>
         <h3 class="text-lg mb-2">
             <Link v-if="!route().current('client.posts.show') " :href="route('client.posts.show', post)">
                 {{ post.title }}
@@ -9,7 +24,16 @@
         <p class="text-gray-600">
             {{ post.description }}
         </p>
-        <div class="flex justify-end mb-4">
+        <div class="flex justify-end mb-4 gap-4">
+            <div class="flex items-center gap-2">
+                <span> {{ post.reposts_count }}</span>
+                <svg @click.prevent="createRepost" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5"
+                     stroke="currentColor" class="text-sky-600 size-4 cursor-pointer">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/>
+                </svg>
+            </div>
             <div class="flex items-center gap-2">
                 <span> {{ post.liked_by_profiles_count }}</span>
                 <svg @click="toggleLike()"
@@ -44,6 +68,13 @@ export default {
     // объявлен в далеком родителе
     // inject: ['greeting'],
 
+    data() {
+        return {
+            repost: {},
+            isRepost: false
+        }
+    },
+
     methods: {
         toggleLike() {
             axios.post(route('client.posts.likes.toggle', this.post.id))
@@ -51,16 +82,37 @@ export default {
                     this.post.is_liked = res.data.is_liked
                     this.post.liked_by_profiles_count = res.data.liked_by_profiles_count
                 })
-        },
-        deletePost(){
+        }
+        ,
+        deletePost() {
             axios.delete(route('client.posts.destroy', this.post.id))
-                .then(res=>{
+                .then(res => {
                     this.$emit('deletePost', this.post)
+                })
+        }
+        ,
+        createRepost() {
+            this.isRepost = true
+        },
+
+        storeRepost() {
+            axios.post(route('client.posts.reposts.store', this.post.id), this.repost)
+                .then( res => {
+                    this.post.reposts_count = res.data.reposts_count
+                    this.repost = {}
+                    this.isRepost = false
                 })
         }
     }
 }
 </script>
 <style scoped>
-
+.modal-shadow {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    top: 0;
+    left: 0;
+}
 </style>

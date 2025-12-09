@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('category_id')->index()->nullable()->constrained('categories');
             $table->foreignId('profile_id')->index()->nullable()->constrained('profiles');
+            $table->foreignId('parent_id')->index()->nullable()->constrained('posts');
             $table->text('body')->nullable();
             $table->dateTime('published_at')->nullable();
             $table->string('image_path')->nullable();

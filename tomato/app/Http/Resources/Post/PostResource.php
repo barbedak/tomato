@@ -23,6 +23,7 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'category_id' => $this->category_id,
             'profile_id' => $this->profile_id,
+            'parent_id' => $this->parent_id,
             'body' => $this->body,
             'published_at' => $this->published_at,
             'image_path' => $this->image_path,
@@ -35,7 +36,9 @@ class PostResource extends JsonResource
             'images' => ImageResource::collection($this->images)->resolve(),
             'tags' => $this->tags_as_string,
             'is_liked' => $this->is_liked,
-            'liked_by_profiles_count' => $this->liked_by_profiles_count
+            'liked_by_profiles_count' => $this->liked_by_profiles_count,
+            'reposts_count' => $this->reposts_count,
+            'parent' => $this->parent
 
         ];
     }

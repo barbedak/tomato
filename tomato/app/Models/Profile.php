@@ -61,7 +61,7 @@ class Profile extends Model
     }
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, 'profile_id');
+        return $this->hasMany(Post::class, 'profile_id')->latest();
     }
 
     public function likedPosts()
