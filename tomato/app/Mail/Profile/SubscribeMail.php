@@ -19,7 +19,6 @@ class SubscribeMail extends Mailable
      */
     public function __construct(private Profile $profile, private bool $is_subscribed)
     {
-        //
     }
 
     /**

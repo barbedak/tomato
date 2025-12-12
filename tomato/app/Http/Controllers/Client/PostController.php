@@ -10,6 +10,7 @@ use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Repost\RepostResource;
 use App\Mail\Comment\StoreCommentMail;
+use App\Mail\Post\StoreRepostMail;
 use App\Mail\Post\ToggleLikeMail;
 use App\Models\Post;
 use Illuminate\Http\Response;

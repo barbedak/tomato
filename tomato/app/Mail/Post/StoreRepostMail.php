@@ -38,7 +38,7 @@ class StoreRepostMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'post.repost',
+            view: 'mail.post.repost',
             with: [
                 'post' => $this->post,
                 'repost' => $this->repost,

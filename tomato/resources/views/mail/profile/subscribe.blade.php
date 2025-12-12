@@ -1,3 +1,7 @@
 <div>
-    <div> User {{ $profile->name }} {{ $is_subscribed ? 'subscribed' : 'unsubscribed' }} on you</div>
+    @if ($is_liked)
+        <div> User {{ $profile->name }} subscribed on you</div>
+    @else
+        <div> User {{ $profile->name }} unsubscribed from you</div>
+    @endif
 </div>
