@@ -23,6 +23,7 @@ class ProfileResource extends JsonResource
             'is_married' => $this->is_married,
             'birthed_at' => $this->birthed_at,
             'avatar' => $this->avatar,
+            'is_subscribed' => $this->isSubscribed
         ];
     }
 }

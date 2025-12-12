@@ -9,8 +9,11 @@ use App\Http\Requests\Client\Post\StoreRepostRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Repost\RepostResource;
+use App\Mail\Comment\StoreCommentMail;
+use App\Mail\Post\ToggleLikeMail;
 use App\Models\Post;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -44,7 +47,9 @@ class PostController extends Controller
 
     public function toggleLike(Post $post)
     {
-        auth()->user()->profile->likedPosts()->toggle($post->id); //меняем в базе, для актуализации объекта нужно вызвать fresh()
+        $res = auth()->user()->profile->likedPosts()->toggle($post->id); //меняем в базе, для актуализации объекта нужно вызвать fresh()
+        $is_liked = count($res['attached']) > 0;
+        Mail::to($post->user)->send(new ToggleLikeMail($post, auth()->user()->profile, $is_liked));
         return PostResource::make($post->fresh())->resolve();
     }
 
@@ -52,6 +57,7 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $comment = $post->comments()->create($data);
+        Mail::to($post->user)->send(new StoreCommentMail($post, $comment));
         return CommentResource::make($comment)->resolve();
     }
 
@@ -68,7 +74,8 @@ class PostController extends Controller
     public function storeRepost(Post $post, StoreRepostRequest $request)
     {
         $data = $request->validated();
-        $post->reposts()->create($data);
+        $repost = $post->reposts()->create($data);
+        Mail::to($post->user)->send(new StoreRepostMail($post, $repost));
         return PostResource::make($post)->resolve();
     }
 }

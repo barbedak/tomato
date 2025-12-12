@@ -75,8 +75,8 @@ export default {
                 body: '',
                 parent_id: null,
             },
-            page: 1,
-            is_show: this.comments.meta.to < this.comments.meta.total,
+            page: 0,
+            is_show:  this.comments.meta.to < this.comments.meta.total,
             replayFor: {
                 body: ''
             }
@@ -102,7 +102,6 @@ export default {
             })
                 .then(res => {
                     this.is_show = res.data.meta.to < res.data.meta.total
-
                     this.commentsData.data = this.commentsData.data.concat(res.data.data);
                     //convert each res.data.data elements to Proxy object
                     let uniqueMap = new Map();

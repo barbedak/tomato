@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\User\StoredUserEvent;
+use App\Mail\Comment\StoreCommentMail;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\File;
@@ -14,6 +15,7 @@ use App\Models\Role;
 use App\Models\Theme;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 use Log;
 
 class GoCommand extends Command
@@ -151,7 +153,10 @@ class GoCommand extends Command
 //            'table'=>'videos',
 //            'operation'=>'index',
 //        ]);
-        $profile = Profile::first();
-        dump($profile->user->name);
+//        $profile = Profile::first();
+//        dump($profile->user->name);
+//        отправка почты
+        $user = User::first();
+        Mail::to($user)->send(new StoreCommentMail());
     }
 }

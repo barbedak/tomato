@@ -59,6 +59,7 @@ class Profile extends Model
     {
         return $this->hasMany(Group::class, 'group_members');
     }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'profile_id')->latest();
@@ -68,6 +69,7 @@ class Profile extends Model
     {
         return $this->morphedByMany(Post::class, 'likeable');
     }
+
     public function likedComments()
     {
         return $this->morphedByMany(Comment::class, 'likeable');
@@ -77,10 +79,12 @@ class Profile extends Model
     {
         return $this->morphedByMany(Video::class, 'likeable');
     }
+
     public function viewedPosts()
     {
         return $this->morphedByMany(Post::class, 'viewable');
     }
+
     public function themes(): HasManyThrough
     {
         return $this->HasManyThrough(Theme::class, Group::class);
@@ -91,4 +95,27 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function subscribers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Profile::class,
+            'subscriber_subscribing',
+            'subscribing_id',
+            'subscriber_id'
+        );
+    }
+    public function subscribings(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Profile::class,
+            'subscriber_subscribing',
+            'subscriber_id',
+            'subscribing_id'
+        );
+    }
+
+    public function getIsSubscribedAttribute(): bool
+    {
+        return $this->subscribers->contains('id', auth()->user()->profile->id);
+    }
 }
