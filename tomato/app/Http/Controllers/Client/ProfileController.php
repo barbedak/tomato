@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Profile\ProfileResource;
+use App\Jobs\Profile\ProfileSubscribeSendMailJob;
 use App\Mail\Profile\SubscribeMail;
 use App\Models\Post;
 use App\Models\Profile;
@@ -33,7 +34,7 @@ class ProfileController extends Controller
     {
         $res = auth()->user()->profile->subscribings()->toggle($profile->id);
         $is_subscribed = count($res['attached']) > 0;
-        Mail::to($profile->user)->send(new SubscribeMail(auth()->user()->profile, $is_subscribed));
+        ProfileSubscribeSendMailJob::dispatch($profile, auth()->user()->profile, $is_subscribed);
         return ProfileResource::make($profile->fresh())->resolve();
     }
 }
