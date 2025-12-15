@@ -14,6 +14,9 @@ defineProps({
     status: {
         type: String,
     },
+    users: {
+        type: Array
+    }
 });
 
 const form = useForm({
@@ -40,16 +43,20 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
+                <select v-model="form.email" class="mt-1 block w-full">
+                    <option value="0">Выберите пользователя</option>
+                    <option v-for="user in users" :value="user.email"> {{ user.email }}</option>
+                </select>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
+<!--                <TextInput-->
+<!--                    id="email"-->
+<!--                    type="email"-->
+<!--                    class="mt-1 block w-full"-->
+<!--                    v-model="form.email"-->
+<!--                    required-->
+<!--                    autofocus-->
+<!--                    autocomplete="username"-->
+<!--                />-->
 
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
