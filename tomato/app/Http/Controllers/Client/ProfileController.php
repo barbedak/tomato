@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Notification\NotificationResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Jobs\Profile\ProfileSubscribeSendMailJob;
@@ -36,5 +37,12 @@ class ProfileController extends Controller
         $is_subscribed = count($res['attached']) > 0;
         ProfileSubscribeSendMailJob::dispatch($profile, auth()->user()->profile, $is_subscribed);
         return ProfileResource::make($profile->fresh())->resolve();
+    }
+
+    public function indexNotification()
+    {
+        $notifications = NotificationResource::collection(auth()->user()->profile->notifications)->resolve();
+        //using notification observer
+        return $notifications;
     }
 }

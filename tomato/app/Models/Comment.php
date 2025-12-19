@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -43,8 +45,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     use HasFactory, SoftDeletes, HasLog, HasFilter;
+
     protected $guarded = false;
-    protected $withCount =['likedByProfiles'];
+    protected $withCount = ['likedByProfiles'];
 
     public function category(): BelongsTo
     {
@@ -71,6 +74,16 @@ class Comment extends Model
         return $this->belongsTo(Profile::class);
     }
 
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
+    public function notification():MorphOne
+    {
+        return $this->morphOne(Notification::class, 'notifiable')->whereNull('read_at');
+    }
+
     public function likedByProfiles()
     {
         return $this->morphToMany(Profile::class, 'likeable', 'likeables');
@@ -86,7 +99,7 @@ class Comment extends Model
         return $this->created_at->diffForHumans();
     }
 
-    public function getIsLikedAttribute() :bool
+    public function getIsLikedAttribute(): bool
     {
         return $this->likedByProfiles->contains(auth()->user()->profile);
     }

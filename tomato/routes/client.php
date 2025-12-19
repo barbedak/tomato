@@ -17,6 +17,7 @@ Route::group(['prefix' => 'client', 'middleware' => 'auth'], function () {
     Route::get('feed', [FeedController::class, 'index'])->name('client.feed.index');
     Route::get('profiles/personal', [ProfileController::class, 'personal'])->name('client.profiles.personal');
     Route::post('profiles/{profile}/subscribes', [ProfileController::class, 'toggleSubscribe'])->name('client.profiles.subscribes.toggle');
+    Route::get('profiles/notifications', [ProfileController::class, 'indexNotification'])->name('client.profiles.notifications.index');
     Route::get('profiles/{profile}', [ProfileController::class, 'show'])->name('client.profiles.show');
     Route::post('comments/{comment}/likes', [CommentController::class, 'toggleLike'])->name('client.comments.likes.toggle');
     Route::get('comments/{comment}/replies', [CommentController::class, 'indexReplies'])->name('client.comments.replies.index');

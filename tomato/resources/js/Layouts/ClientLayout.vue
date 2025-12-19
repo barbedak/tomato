@@ -1,16 +1,34 @@
 <template>
     <div class="flex min-h-screen flex-col">
         <section class="w-full bg-white border-b border-gray-200 p-4 flex flex-row">
-            <header class="w-1/2 mx-auto">
-                <Link :href="route('client.feed.index')">
-                    Feed
-                </Link>
-                <Link :href="route('client.profiles.personal')">
-                    Personal Feed
-                </Link>
-                <!--                    <Link :href="route('admin.roles.index')" :class="[$page.url === '/admin/roles' ? 'bg-gray-800' : '', 'block text-gray-300 p-4 border-b border-gray-500']">Roles</Link>-->
-                <!--                    <Link :href="route('admin.posts.index')" :class="[$page.url === '/admin/posts' ? 'bg-gray-800' : '', 'block text-gray-300 p-4 border-b border-gray-500']">Posts</Link>-->
-                <!--                    <Link :href="route('admin.comments.index')" :class="[$page.url === '/admin/comments' ? 'bg-gray-800' : '', 'block text-gray-300 p-4 border-b border-gray-500']">Comments</Link>-->
+            <header class="w-1/2 mx-auto flex items-center justify-between">
+                <nav>
+                    <Link :href="route('client.feed.index')">
+                        Feed
+                    </Link>
+                    <Link :href="route('client.profiles.personal')">
+                        Personal Feed
+                    </Link>
+                </nav>
+                <div class="relative">
+                    <div @click="getNotifications" class="flex items-center justify-between gap-2 cursor-pointer">
+                        <span>{{ auth.user.profile.notifications_count }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
+                        </svg>
+                    </div>
+                    <div v-if="isPopup" class="notification-popup bg-white border border-gray-200 p-4">
+                        <div v-for="notification in notifications" class="cursor-pointer mb-2 pb-2">
+                            <Link :href="route('client.posts.show', notification.notifiable.commentable.id)">
+                                {{ notification.body }}
+                            </Link>
+                        </div>
+                        <div @click="isPopup = false" class="cursor-pointer text-center mb-2">Close</div>
+                    </div>
+                </div>
+
             </header>
         </section>
         <section class="">
@@ -34,10 +52,39 @@ import {Link} from "@inertiajs/vue3";
 export default {
     name: "ClientLayout",
 
-    components: {Link}
+    components: {Link},
+
+    props: {
+        auth: {
+            required: true,
+            type: Object
+        }
+    },
+
+    data() {
+        return {
+            isPopup: false,
+            notifications: []
+        }
+    },
+
+    methods: {
+        getNotifications(){
+            axios.get(route('client.profiles.notifications.index'))
+                .then( res => {
+                    this.isPopup = true;
+                    this.notifications = res.data;
+                });
+        }
+    }
 }
+
 </script>
 
 <style scoped>
-
+.notification-popup {
+    position: absolute;
+    right: 0;
+    width: 200px;
+}
 </style>

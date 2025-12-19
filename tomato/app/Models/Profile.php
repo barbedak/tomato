@@ -118,4 +118,14 @@ class Profile extends Model
     {
         return $this->subscribers->contains('id', auth()->user()->profile->id);
     }
+
+    public function notifications():HasMany
+    {
+        return $this->hasMany(Notification::class)->whereNull('read_at');
+    }
+
+    public function getNotificationsCountAttribute(): int
+    {
+        return $this->notifications()->count();
+    }
 }

@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\File;
 use App\Models\Group;
 use App\Models\Image;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\Profile;
 use App\Models\Role;
@@ -156,7 +157,19 @@ class GoCommand extends Command
 //        $profile = Profile::first();
 //        dump($profile->user->name);
 //        отправка почты
-        $user = User::first();
-        Mail::to($user)->send(new StoreCommentMail());
+//        $user = User::first();
+//        Mail::to($user)->send(new StoreCommentMail());
+
+        //notification
+        $post = Post::first();
+        $comment = $post->comments()->create([
+            'body' => 'trew',
+            'profile_id' => 1
+        ]);
+        $comment->notifications()->create([
+            'body' => 'comment in your post',
+            'profile_id' => 1
+        ]);
+
     }
 }
