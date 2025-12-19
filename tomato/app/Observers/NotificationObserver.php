@@ -6,9 +6,9 @@ use App\Models\Notification;
 
 class NotificationObserver
 {
-    public function retrieved(): void
+    public function retrieved(Notification $notification): void
     {
         //auth()->user()?
-        auth()->user()?->profile->notifications()->update(['read_at' => now()->format('Y-m-d H:i:s')]);
+        $notification->update(['read_at' => now()->format('Y-m-d H:i:s')]);
     }
 }

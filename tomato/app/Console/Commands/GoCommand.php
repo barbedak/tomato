@@ -140,12 +140,12 @@ class GoCommand extends Command
 //        Log::channel('posts')->info('post created {id}', ['id' => $post->id]);
 //        $post = Post::first();
 //        $post->delete();
-        $post = Post::first();
+//        $post = Post::first();
 //        $post->permission()->create([
 //            'role_id' => 1,
 //            'operation' => 'index'
 //        ]);
-        $role = Role::first();
+//        $role = Role::first();
 //        $role->permissions()->create([
 //            'table'=>'posts',
 //            'operation'=>'index',
