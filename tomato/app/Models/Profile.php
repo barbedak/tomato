@@ -52,9 +52,15 @@ class Profile extends Model
 
     public function chats(): BelongsToMany
     {
-        return $this->belongsToMany(Chat::class);
+        return $this->belongsToMany(Chat::class, 'chat_profile');
     }
 
+    public function chatsWithProfile(Profile $profile)
+    {
+        return $this->chats()->whereHas('profiles', function ($q) use ($profile) {
+            $q->where('profile_id', $profile->id);
+        });
+    }
     public function groups(): HasMany
     {
         return $this->hasMany(Group::class, 'group_members');

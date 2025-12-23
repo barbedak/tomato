@@ -32,13 +32,15 @@ class Chat extends Model
 {
     use SoftDeletes;
 
+    protected $guarded = false;
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
     }
 
-    public function members(): BelongsToMany
+
+    public function profiles(): BelongsToMany
     {
-        return $this->belongsToMany(Profile::class, 'chat_profile');
+        return $this->belongsToMany(Profile::class, 'chat_profile')->withPivot('profile_id');
     }
 }

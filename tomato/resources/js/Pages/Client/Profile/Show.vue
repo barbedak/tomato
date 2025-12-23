@@ -3,6 +3,10 @@
         <div class="mb-4 border border-gray-200 p-4 flex items-center justify-between">
             <div> {{ profile.name }}</div>
             <div>
+                <Link method="POST" :href="route('client.profiles.chats.store', profile.id)"
+                      class="mr-2 cursor-pointer inline-block px-3 py-2 border rounded bg-indigo-700 text-white border-indigo-800">
+                    Message
+                </Link>
                 <a @click.prevent="toggleSubscribe" href="#"
                    :class="[profile.is_subscribed ? 'bg-white text-sky-800' : 'text-white bg-sky-700' , 'inline-block px-3 py-2 border rounded border-sky-800']"
                 >{{ profile.is_subscribed ? 'Unsubscribe' : 'Subscribe' }}</a>

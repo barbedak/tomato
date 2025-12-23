@@ -18,8 +18,6 @@ return new class extends Migration
             $table->foreignId('profile_id')->index()->constrained('profiles');
             $table->foreignId('chat_id')->index()->constrained('chats');
             $table->text('body')->nullable();
-            $table->foreignId('answer_id')->index()->nullable()->constrained('messages');
-            $table->foreignId('repost_id')->index()->nullable()->constrained('messages');
             $table->softDeletes();
 
             $table->timestamps();
