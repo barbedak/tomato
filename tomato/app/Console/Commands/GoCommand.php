@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Events\User\StoredUserEvent;
 use App\Mail\Comment\StoreCommentMail;
 use App\Models\Category;
+use App\Models\Chat;
 use App\Models\Comment;
 use App\Models\File;
 use App\Models\Group;
@@ -160,16 +161,38 @@ class GoCommand extends Command
 //        $user = User::first();
 //        Mail::to($user)->send(new StoreCommentMail());
 
-        //notification
-        $post = Post::first();
-        $comment = $post->comments()->create([
-            'body' => 'trew',
-            'profile_id' => 1
-        ]);
-        $comment->notifications()->create([
-            'body' => 'comment in your post',
-            'profile_id' => 1
-        ]);
+//        //notification
+//        $post = Post::first();
+//        $comment = $post->comments()->create([
+//            'body' => 'trew',
+//            'profile_id' => 1
+//        ]);
+//        $comment->notifications()->create([
+//            'body' => 'comment in your post',
+//            'profile_id' => 1
+//        ]);
 
+        $profile = Profile::first();
+        $profile2 = Profile::find(2);
+        $profile3 = Profile::find(3);
+
+        $profileIds = [$profile->id, $profile2->id];
+//        Chat::create()->profiles()->attach($profileIds);
+
+
+//        $chat = Chat::whereHas('profiles', function ($q) use ($profileIds) {
+//            $q->whereIn('profile_id', $profileIds);
+//        })
+//            ->has('profiles', '=', count($profileIds)) // чат должен содержать обоих
+//            ->first();
+//        $exists = $profile->chats()->whereHas('profiles', function ($query) use ($profile2) {
+//            $query->where('profile_id', $profile2->id);
+//        })->exists();
+//        $chat = Chat::firstOrNew(['id' => $profile->chats()->wherePivotIn('profile_id', $profileIds)->count() == 2]);
+//        $chat = Chat::whereHas('profiles', function($q) {
+//            $q->whereIn('profile_id', [1, 2]);
+//        }, '=', 2)->first();
+//        $chat = $profile3->chatsWithProfile($profile));
+//        dd($chat->id);
     }
 }

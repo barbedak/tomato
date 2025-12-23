@@ -8,6 +8,7 @@ use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Jobs\Profile\ProfileSubscribeSendMailJob;
 use App\Mail\Profile\SubscribeMail;
+use App\Models\Chat;
 use App\Models\Post;
 use App\Models\Profile;
 use Illuminate\Http\Request;
@@ -44,5 +45,16 @@ class ProfileController extends Controller
         $notifications = NotificationResource::collection(auth()->user()->profile->notifications)->resolve();
         //using notification observer
         return $notifications;
+    }
+
+    public function storeChat(Profile $profile)
+    {
+        $profileAuthUser = auth()->user()->profile;
+        $chat = Chat::whereHas('profiles', fn ($q) => $q->where('profile_id', $profile->id))
+            ->whereHas('profiles', fn ($q) => $q->where('profile_id', $profileAuthUser->id))
+            ->firstOrCreate();
+//        $chat = $profile->chatsWithProfile($profileAuthUser)->firstOrCreate();
+        $chat->profiles()->syncWithoutDetaching([$profile->id, $profileAuthUser->id]);
+        return redirect()->route('client.chats.show', $chat->id);
     }
 }
