@@ -38,7 +38,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Message extends Model
 {
 
+    protected $guarded = false;
     use SoftDeletes;
+
     public function answers(): HasMany
     {
         return $this->HasMany(Message::class);
@@ -59,5 +61,12 @@ class Message extends Model
         return $this->hasOne(Message::class);
     }
 
-
+    public function getAuthorNameAttribute()
+    {
+        return $this->profile->name;
+    }
+    public function getFormattedDateAttribute()
+    {
+        return $this->created_at->diffForHumans();
+    }
 }

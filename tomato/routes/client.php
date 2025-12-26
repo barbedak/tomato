@@ -21,6 +21,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth'], 'as' => 'client.']
 
     Route::post('profiles/{profile}/chats', [ProfileController::class, 'storeChat'])->name('profiles.chats.store');
     Route::get('chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
+    Route::post('chats/{chat}/message', [ChatController::class, 'storeMessage'])->name('chats.messages.store');
     Route::get('profiles/notifications', [ProfileController::class, 'indexNotification'])->name('profiles.notifications.index');
     Route::get('profiles/{profile}', [ProfileController::class, 'show'])->name('profiles.show');
     Route::post('comments/{comment}/likes', [CommentController::class, 'toggleLike'])->name('comments.likes.toggle');

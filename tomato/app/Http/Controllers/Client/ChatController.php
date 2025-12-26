@@ -3,15 +3,27 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\Chat\StoreMessageRequest;
 use App\Http\Resources\Chat\ChatResource;
+use App\Http\Resources\Message\MessageResource;
+use App\Http\Resources\Profile\ProfileResource;
+use App\Mappers\ChatMapper;
 use App\Models\Chat;
+use App\Models\Message;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
     public function show(Chat $chat)
     {
-        $chat = ChatResource::make($chat)->resolve();
-        return inertia('Client/Chat/Show', compact('chat'));
+        $data = ChatMapper::show($chat);
+        return inertia('Client/Chat/Show', $data);
+    }
+
+    public function storeMessage(Chat $chat, StoreMessageRequest $request)
+    {
+        $data = $request->validated();
+        $message = $chat->messages()->create($data);
+        return MessageResource::make($message)->resolve();
     }
 }
