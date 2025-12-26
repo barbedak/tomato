@@ -12,6 +12,7 @@ use App\Models\Chat;
 use App\Models\Post;
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
@@ -50,10 +51,10 @@ class ProfileController extends Controller
     public function storeChat(Profile $profile)
     {
         $profileAuthUser = auth()->user()->profile;
-        $chat = Chat::whereHas('profiles', fn ($q) => $q->where('profile_id', $profile->id))
-            ->whereHas('profiles', fn ($q) => $q->where('profile_id', $profileAuthUser->id))
-            ->firstOrCreate();
-//        $chat = $profile->chatsWithProfile($profileAuthUser)->firstOrCreate();
+        $members = implode('-',Arr::sort([$profile->id, $profileAuthUser->id]));
+        $chat = Chat::firstOrCreate([
+            'members' => $members
+        ]);
         $chat->profiles()->syncWithoutDetaching([$profile->id, $profileAuthUser->id]);
         return redirect()->route('client.chats.show', $chat->id);
     }
