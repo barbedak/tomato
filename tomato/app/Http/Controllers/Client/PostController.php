@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\WS\StoreNotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Post\IndexCommentRequest;
 use App\Http\Requests\Client\Post\StoreCommentRequest;
@@ -53,6 +54,11 @@ class PostController extends Controller
     {
         $res = auth()->user()->profile->likedPosts()->toggle($post->id); //меняем в базе, для актуализации объекта нужно вызвать fresh()
         $is_liked = count($res['attached']) > 0;
+        $notification = $post->notifications()->create([
+            'body' => $is_liked ? 'liked your post' : 'unliked your post',
+            'profile_id' => $post->profile->id,
+        ]);
+        broadcast(new StoreNotificationEvent($post->profile, $notification->body));
         PostToggelLikeSendMailJob::dispatch($post, auth()->user()->profile, $is_liked);
         return PostResource::make($post->fresh())->resolve();
     }
@@ -61,6 +67,11 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $comment = $post->comments()->create($data);
+        $notification = $comment->notifications()->create([
+            'body' => 'comment in your post',
+            'profile_id' => $post->profile->id,
+        ]);
+        broadcast(new StoreNotificationEvent($post->profile, $notification->body));
         CommentStoreSendMailJob::dispatch($post, $comment)->onQueue('comment_store_send_mail');
         return CommentResource::make($comment)->resolve();
     }
@@ -79,6 +90,11 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $repost = $post->reposts()->create($data);
+        $notification = $repost->notifications()->create([
+            'body' => 'repost from your post',
+            'profile_id' => $post->profile->id,
+        ]);
+        broadcast(new StoreNotificationEvent($post->profile, $notification->body));
         PostRepostSendMailJob::dispatch($post, $repost)->onQueue('repost_send_mail');
         return PostResource::make($post)->resolve();
     }

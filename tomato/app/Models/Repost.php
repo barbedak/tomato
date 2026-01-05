@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -23,4 +25,13 @@ class Repost extends Model
 {
     use softDeletes;
 
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
+    public function notification():MorphOne
+    {
+        return $this->morphOne(Notification::class, 'notifiable')->whereNull('read_at');
+    }
 }

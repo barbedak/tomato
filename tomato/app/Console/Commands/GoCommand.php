@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\User\StoredUserEvent;
+use App\Events\WS\SendMessageEvent;
 use App\Mail\Comment\StoreCommentMail;
 use App\Models\Category;
 use App\Models\Chat;
@@ -194,5 +195,8 @@ class GoCommand extends Command
 //        }, '=', 2)->first();
 //        $chat = $profile3->chatsWithProfile($profile));
 //        dd($chat->id);
+
+//        broadcast
+            SendMessageEvent::dispatch();
     }
 }

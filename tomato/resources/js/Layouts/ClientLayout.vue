@@ -11,7 +11,7 @@
                     </Link>
                 </nav>
                 <div class="relative">
-                    <div @click="getNotifications" class="flex items-center justify-between gap-2 cursor-pointer">
+                    <div @click="showNotifications" class="flex items-center justify-between gap-2 cursor-pointer">
                         <span>{{ auth.user.profile.notifications_count }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="size-6">
@@ -21,11 +21,12 @@
                     </div>
                     <div v-if="isPopup" class="notification-popup bg-white border border-gray-200 p-4">
                         <div v-for="notification in notifications" class="cursor-pointer mb-2 pb-2">
-                            <Link :href="route('client.posts.show', notification.notifiable.commentable.id)">
-                                {{ notification.body }}
-                            </Link>
+<!--                            <Link :href="route('client.posts.show', notification.notifiable.commentable.id)">-->
+<!--                                {{ notification.body }}-->
+<!--                            </Link>-->
+                            {{ notification.body }}
                         </div>
-                        <div @click="isPopup = false" class="cursor-pointer text-center mb-2">Close</div>
+                        <div @click="closeNotifications" class="cursor-pointer text-center mb-2">Close</div>
                     </div>
                 </div>
 
@@ -68,11 +69,27 @@ export default {
         }
     },
 
+    created() {
+        Echo.private(`notifications.${this.auth.user.profile.id}`)
+            .listen('.notifications.broadcast', (e) => {
+                this.auth.user.profile.notifications_count += 1;
+            });
+    },
+
     methods: {
-        getNotifications(){
+        showNotifications(){
+            this.getNotifications();
+            this.isPopup = true;
+        },
+
+        closeNotifications(){
+            this.auth.user.profile.notifications_count = 0;
+            this.isPopup = false;
+        },
+
+        getNotifications() {
             axios.get(route('client.profiles.notifications.index'))
-                .then( res => {
-                    this.isPopup = true;
+                .then(res => {
                     this.notifications = res.data;
                 });
         }

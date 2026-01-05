@@ -31,7 +31,6 @@
 import ClientLayout from "@/Layouts/ClientLayout.vue";
 import ItemMessage from "@/Components/Message/ItemMessage.vue";
 
-
 export default {
     name: "Show",
     components: {ItemMessage},
@@ -64,6 +63,13 @@ export default {
         }
     },
 
+    created() {
+        // Echo.channel(`chats.${this.chat.id}.messages.store`)
+        Echo.private(`chats.${this.chat.id}.messages.store`)
+            .listen('.messages.broadcast', (e) => {
+                this.messages.push(e.message);
+            });
+    },
 
     methods: {
         storeMessage() {

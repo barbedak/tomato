@@ -15,6 +15,7 @@
         <div v-if="post.parent_id">
             <ItemPost :post="post.parent"></ItemPost>
         </div>
+        <div> {{ post.profile_name }} </div>
         <h3 class="text-lg mb-2">
             <Link v-if="!route().current('client.posts.show') " :href="route('client.posts.show', post)">
                 {{ post.title }}

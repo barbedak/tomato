@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\WS\SendMessageEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Chat\StoreMessageRequest;
 use App\Http\Resources\Chat\ChatResource;
@@ -24,6 +25,7 @@ class ChatController extends Controller
     {
         $data = $request->validated();
         $message = $chat->messages()->create($data);
+        broadcast(new SendMessageEvent($message))->toOthers();
         return MessageResource::make($message)->resolve();
     }
 }

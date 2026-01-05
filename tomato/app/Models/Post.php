@@ -64,8 +64,9 @@ use Storage;
 class Post extends Model
 {
     use HasFactory, SoftDeletes, HasLog, HasFilter;
+
     protected $guarded = false;
-    protected $withCount =['likedByProfiles']; // liked_by_profiles_count
+    protected $withCount = ['likedByProfiles']; // liked_by_profiles_count
 
 
 //    protected static function bootHasLog()
@@ -129,6 +130,7 @@ class Post extends Model
     {
         return $this->hasOne(Post::class, 'id', 'parent_id');
     }
+
     public function reposts(): HasMany
     {
         return $this->hasMany(Post::class, 'parent_id', 'id');
@@ -174,6 +176,16 @@ class Post extends Model
         return $this->morphToMany(Profile::class, 'likeable', 'likeables');
     }
 
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
+    public function notification(): MorphOne
+    {
+        return $this->morphOne(Notification::class, 'notifiable')->whereNull('read_at');
+    }
+
     public function views()
     {
         return $this->morphToMany(Profile::class, 'viewable', 'viewables');
@@ -198,7 +210,7 @@ class Post extends Model
         return implode(', ', $this->tags->pluck('title')->toArray());
     }
 
-    public function getIsLikedAttribute() :bool
+    public function getIsLikedAttribute(): bool
     {
         return $this->likedByProfiles->contains(auth()->user()->profile);
     }
