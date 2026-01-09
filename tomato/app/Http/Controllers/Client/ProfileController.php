@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\Profile\IndexRequest;
 use App\Http\Resources\Notification\NotificationResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Profile\ProfileResource;
@@ -11,6 +12,7 @@ use App\Mail\Profile\SubscribeMail;
 use App\Models\Chat;
 use App\Models\Post;
 use App\Models\Profile;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
@@ -18,6 +20,14 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
+    public function index(IndexRequest $request)
+    {
+        $data = $request->validated();
+        $profiles = ProfileResource::collection(
+            Profile::filter($data['filter'])->get()->except(auth()->user()->profile->id)
+        )->resolve();
+        return $profiles;
+    }
     public function personal()
     {
         $posts = auth()->user()->profile->posts;
@@ -50,12 +60,7 @@ class ProfileController extends Controller
 
     public function storeChat(Profile $profile)
     {
-        $profileAuthUser = auth()->user()->profile;
-        $members = implode('-',Arr::sort([$profile->id, $profileAuthUser->id]));
-        $chat = Chat::firstOrCreate([
-            'members' => $members
-        ]);
-        $chat->profiles()->syncWithoutDetaching([$profile->id, $profileAuthUser->id]);
+        $chat = ChatService::storeOneToOne($profile);
         return redirect()->route('client.chats.show', $chat->id);
     }
 }

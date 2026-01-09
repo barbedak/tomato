@@ -2,12 +2,15 @@
     <div class="flex min-h-screen flex-col">
         <section class="w-full bg-white border-b border-gray-200 p-4 flex flex-row">
             <header class="w-1/2 mx-auto flex items-center justify-between">
-                <nav>
+                <nav class="flex gap-2">
                     <Link :href="route('client.feed.index')">
                         Feed
                     </Link>
                     <Link :href="route('client.profiles.personal')">
                         Personal Feed
+                    </Link>
+                    <Link :href="route('client.chats.index')">
+                        Chats
                     </Link>
                 </nav>
                 <div class="relative">
@@ -70,8 +73,8 @@ export default {
     },
 
     created() {
-        Echo.private(`notifications.${this.auth.user.profile.id}`)
-            .listen('.notifications.broadcast', (e) => {
+        Echo.private(`notifications.profiles.${this.auth.user.profile.id}`)
+            .listen('.notifications.profiles.broadcast', (e) => {
                 this.auth.user.profile.notifications_count += 1;
             });
     },

@@ -9,6 +9,6 @@ Broadcast::channel('chats.{id}.messages.store', function ($user, $id) {
     return (bool) $user->profile->chats->contains($id);
 });
 
-Broadcast::channel('notifications.{id}', function ($user, $id) {
+Broadcast::channel('notifications.profiles.{id}', function ($user, $id) {
         return (bool) $user->profile->id == (int) $id;
 });

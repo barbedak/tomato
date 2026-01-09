@@ -5,22 +5,35 @@ namespace App\Http\Controllers\Client;
 use App\Events\WS\SendMessageEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Chat\StoreMessageRequest;
+use App\Http\Requests\Client\Chat\StoreRequest;
 use App\Http\Resources\Chat\ChatResource;
 use App\Http\Resources\Message\MessageResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Mappers\ChatMapper;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
+    public function index()
+    {
+        $chats = ChatResource::collection(auth()->user()->profile->chats)->resolve();
+        return inertia('Client/Chat/Index', compact('chats'));
+    }
     public function show(Chat $chat)
     {
         $data = ChatMapper::show($chat);
         return inertia('Client/Chat/Show', $data);
     }
 
+    public function store(StoreRequest $request)
+    {
+        $data = $request->validated();
+        $chat = ChatService::storeGroup($data);
+        return redirect()->route('client.chats.show', $chat->id);
+    }
     public function storeMessage(Chat $chat, StoreMessageRequest $request)
     {
         $data = $request->validated();

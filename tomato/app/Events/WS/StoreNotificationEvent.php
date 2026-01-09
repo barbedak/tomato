@@ -33,13 +33,15 @@ class StoreNotificationEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('notifications.' . $this->profile->id),
+//            new PrivateChannel('notifications.' . $this->profile->id),
+            new PrivateChannel('notifications.profiles.' . $this->profile->id)
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'notifications.broadcast';
+//        return 'notifications.broadcast';
+        return 'notifications.profiles.broadcast';
     }
 
     /**
