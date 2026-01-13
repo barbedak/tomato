@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Client\ChatController;
+use App\Http\Controllers\Client\GroupController;
 use App\Http\Controllers\Client\CommentController;
 use App\Http\Controllers\Client\FeedController;
 use App\Http\Controllers\Client\PostController;
@@ -23,6 +24,12 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth'], 'as' => 'client.']
     Route::post('profiles/{profile}/chats', [ProfileController::class, 'storeChat'])->name('profiles.chats.store');
     Route::get('profiles/notifications', [ProfileController::class, 'indexNotification'])->name('profiles.notifications.index');
     Route::get('profiles/{profile}', [ProfileController::class, 'show'])->name('profiles.show');
+
+    Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::post('groups', [GroupController::class, 'store'])->name('groups.store');
+    Route::get('groups/create', [GroupController::class, 'create'])->name('groups.create');
+    Route::get('groups/{group}', [GroupController::class, 'show'])->name('groups.show');
+    Route::post('groups/{group}/profiles', [GroupController::class, 'toggleProfiles'])->name('groups.profiles.toggle');
 
     Route::get('chats', [ChatController::class, 'index'])->name('chats.index');
     Route::post('chats', [ChatController::class, 'store'])->name('chats.store');

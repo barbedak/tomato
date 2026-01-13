@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->text('title');
-            $table->foreignId('profile_id')->index()->constrained('profiles');
             $table->text('description')->nullable();
             $table->text('members')->nullable();
             $table->string('avatar')->nullable();

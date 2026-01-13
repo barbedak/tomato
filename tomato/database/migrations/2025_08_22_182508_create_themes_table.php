@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('title');
             $table->text('description')->nullable();
+            $table->foreignId('profile_id')->index()->constrained('profiles');
             $table->foreignId('group_id')->index()->constrained('groups');
             $table->softDeletes();
 

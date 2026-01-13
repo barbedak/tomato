@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('theme_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('theme_id')->index()->constrained('themes');
-            $table->foreignId('profile_id')->index()->constrained('profiles');
             $table->text('body')->nullable();
+            $table->foreignId('profile_id')->index()->constrained('profiles');
+            $table->foreignId('theme_id')->index()->constrained('themes');
             $table->foreignId('answer_id')->nullable()->index()->constrained('theme_messages');
             $table->foreignId('repost_id')->nullable()->index()->constrained('theme_messages');
             $table->timestamps();

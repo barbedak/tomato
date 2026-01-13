@@ -17,17 +17,10 @@ class ChatResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title ?? $this->getChatName($this->members),
+            'title' => $this->title ?? $this->chat_name,
             'members' => $this->members
         ];
     }
 
-    private function getChatName(string $members): string
-    //перенести в аттрибут
-    {
-        $membersIds = explode('-', $members);
-        $companionId = array_diff($membersIds, [auth()->user()->profile->id]);
-        $companion = Profile::find(reset($companionId));
-        return 'private chat with ' . $companion->name;
-    }
+
 }

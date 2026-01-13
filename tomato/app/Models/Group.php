@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Group extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $guarded = false;
 
     public function profile(): BelongsTo
     {
@@ -55,5 +56,17 @@ class Group extends Model
     public function user(): BelongsTo
     {
         return $this->profile->user();
+    }
+
+    public function subscribers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Profile::class,
+            'group_profile'
+        );
+    }
+    public function getIsSubscribedAttribute(): bool
+    {
+        return $this->subscribers->contains('id', auth()->user()->profile->id);
     }
 }

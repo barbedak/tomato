@@ -55,9 +55,9 @@ class Profile extends Model
         return $this->belongsToMany(Chat::class, 'chat_profile');
     }
 
-    public function groups(): HasMany
+    public function groups(): BelongsToMany
     {
-        return $this->hasMany(Group::class, 'group_members');
+        return $this->belongsToMany(Group::class, 'group_profile');
     }
 
     public function posts(): HasMany

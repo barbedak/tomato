@@ -43,4 +43,13 @@ class Chat extends Model
     {
         return $this->belongsToMany(Profile::class, 'chat_profile')->withPivot('profile_id');
     }
+
+    public function getChatNameAttribute(): string
+        //перенести в аттрибут
+    {
+        $membersIds = explode('-', $this->members);
+        $companionId = array_diff($membersIds, [auth()->user()->profile->id]);
+        $companion = Profile::find(reset($companionId));
+        return 'private chat with ' . $companion->name;
+    }
 }

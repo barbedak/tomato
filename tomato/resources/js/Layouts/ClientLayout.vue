@@ -12,6 +12,9 @@
                     <Link :href="route('client.chats.index')">
                         Chats
                     </Link>
+                    <Link :href="route('client.groups.index')">
+                        Groups
+                    </Link>
                 </nav>
                 <div class="relative">
                     <div @click="showNotifications" class="flex items-center justify-between gap-2 cursor-pointer">
